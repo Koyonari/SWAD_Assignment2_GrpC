@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\user\\Documents\\Files\\Ngee Ann\\Y2 Semester 1\\Software Analysis \u0026 Design 4CU\\Assignment 2\\SWAD_Assignment2_GrpC\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{9365B916-6157-40DD-96D6-8469016AEDF7}|SWAD_Assignment2_GrpC.csproj|c:\\users\\user\\documents\\files\\ngee ann\\y2 semester 1\\software analysis \u0026 design 4cu\\assignment 2\\swad_assignment2_grpc\\swad_assignment_grpc_sourcecode\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9365B916-6157-40DD-96D6-8469016AEDF7}|SWAD_Assignment2_GrpC.csproj|solutionrelative:swad_assignment_grpc_sourcecode\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\user\\Documents\\Files\\Ngee Ann\\Y2 Semester 1\\Software Analysis \u0026 Design 4CU\\Assignment 2\\SWAD_Assignment2_GrpC\\SWAD_Assignment_GrpC_SourceCode\\Program.cs",
+              "RelativeDocumentMoniker": "SWAD_Assignment_GrpC_SourceCode\\Program.cs",
+              "ToolTip": "C:\\Users\\user\\Documents\\Files\\Ngee Ann\\Y2 Semester 1\\Software Analysis \u0026 Design 4CU\\Assignment 2\\SWAD_Assignment2_GrpC\\SWAD_Assignment_GrpC_SourceCode\\Program.cs",
+              "RelativeToolTip": "SWAD_Assignment_GrpC_SourceCode\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-02T17:32:07.252Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
