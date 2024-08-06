@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace SWAD_Assignment2_GrpC
 {
-    internal class Car
+    public class Car
     {
-        private string id;
         private string model;
         private string make;
         private int year;
@@ -21,11 +20,7 @@ namespace SWAD_Assignment2_GrpC
         private float rentalRate;
 
         // Properties
-        public string Id
-        {
-            get { return id; }
-            set { id = value; }
-        }
+        public int Id { get; set; }
 
         public string Model
         {
@@ -88,9 +83,9 @@ namespace SWAD_Assignment2_GrpC
         }
 
         // Constructor
-        public Car(string id, string model, string make, int year, string status, int mileage, string listingName, string licensePlateNumber, bool insuranceStatus, string description, float rentalRate)
+        public Car(int id, string model, string make, int year, string status, int mileage, string listingName, string licensePlateNumber, bool insuranceStatus, string description, float rentalRate)
         {
-            this.id = id;
+            Id = id;
             this.model = model;
             this.make = make;
             this.year = year;
