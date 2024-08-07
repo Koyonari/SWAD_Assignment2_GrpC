@@ -9,10 +9,15 @@ namespace SWAD_Assignment2_GrpC
     public class CarRegistry
     {
         private readonly List<Car> _cars = new List<Car>();
-        private const string FilePath = "cars.txt";
+        private readonly HashSet<string> _validMakes;
+        private readonly HashSet<string> _validModels;
+        private readonly string _carsFilePath;
 
-        public CarRegistry()
+        public CarRegistry(string makesFilePath, string modelsFilePath, string carsFilePath)
         {
+            _validMakes = LoadValidMakes(makesFilePath);
+            _validModels = LoadValidModels(modelsFilePath);
+            _carsFilePath = carsFilePath;
             LoadCars();
         }
 
@@ -22,69 +27,102 @@ namespace SWAD_Assignment2_GrpC
             SaveCars();
         }
 
-        public List<Car> GetCarsByOwner(CarOwner owner)
+        public bool IsValidMake(string make)
         {
-            return _cars.FindAll(car => car.OwnerId == owner.Id);
+            return _validMakes.Contains(make);
+        }
+
+        public bool IsValidModel(string model)
+        {
+            return _validModels.Contains(model);
+        }
+
+        public List<Car> GetAllCars()
+        {
+            return _cars;
+        }
+
+        private HashSet<string> LoadValidMakes(string filePath)
+        {
+            var makes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (File.Exists(filePath))
+            {
+                var lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    makes.Add(line.Trim());
+                }
+            }
+            else
+            {
+                Console.WriteLine("Makes file not found.");
+            }
+            return makes;
+        }
+
+        private HashSet<string> LoadValidModels(string filePath)
+        {
+            var models = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (File.Exists(filePath))
+            {
+                var lines = File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    models.Add(line.Trim());
+                }
+            }
+            else
+            {
+                Console.WriteLine("Models file not found.");
+            }
+            return models;
         }
 
         private void SaveCars()
         {
-            try
+            var lines = new List<string>();
+            foreach (var car in _cars)
             {
-                using (var writer = new StreamWriter(FilePath))
-                {
-                    foreach (var car in _cars)
-                    {
-                        writer.WriteLine($"{car.LicensePlate}|{car.Make}|{car.Model}|{car.YearOfManufacture}|{car.Mileage}|{car.RentalRates.DailyRate}|{car.RentalRates.WeeklyRate}|{car.RentalRates.MonthlyRate}|{car.OwnerId}");
-                    }
-                }
+                var line = $"{car.Id}|{car.Model}|{car.Make}|{car.Year}|{car.Status}|{car.Mileage}|{car.ListingName}|{car.LicensePlateNumber}|{car.InsuranceStatus}|{car.Description}|{car.RentalRate}";
+                lines.Add(line);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving cars: {ex.Message}");
-            }
+            File.WriteAllLines(_carsFilePath, lines);
         }
 
         private void LoadCars()
         {
-            if (File.Exists(FilePath))
+            if (File.Exists(_carsFilePath))
             {
-                try
+                var lines = File.ReadAllLines(_carsFilePath);
+                _cars.Clear();
+                foreach (var line in lines)
                 {
-                    using (var reader = new StreamReader(FilePath))
+                    var parts = line.Split('|');
+                    if (parts.Length == 11)
                     {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            var parts = line.Split('|');
-                            if (parts.Length == 9)
-                            {
-                                var car = new Car
-                                {
-                                    LicensePlate = parts[0],
-                                    Make = parts[1],
-                                    Model = parts[2],
-                                    YearOfManufacture = int.Parse(parts[3]),
-                                    Mileage = int.Parse(parts[4]),
-                                    RentalRates = new RentalRates
-                                    {
-                                        DailyRate = decimal.Parse(parts[5]),
-                                        WeeklyRate = decimal.Parse(parts[6]),
-                                        MonthlyRate = decimal.Parse(parts[7])
-                                    },
-                                    OwnerId = int.Parse(parts[8])
-                                };
-                                _cars.Add(car);
-                            }
-                        }
+                        var car = new Car(
+                            int.Parse(parts[0]),
+                            parts[1],
+                            parts[2],
+                            int.Parse(parts[3]),
+                            parts[4],
+                            int.Parse(parts[5]),
+                            parts[6],
+                            parts[7],
+                            bool.Parse(parts[8]),
+                            parts[9],
+                            float.Parse(parts[10])
+                        );
+                        _cars.Add(car);
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loading cars: {ex.Message}");
-                }
+            }
+            else
+            {
+                Console.WriteLine("Cars file not found. Starting with an empty list.");
             }
         }
     }
 
 }
+
