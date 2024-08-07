@@ -2,16 +2,15 @@
 
 
 
-
+//----------------------------------------------------------------Daniel----------------------------------------------------------------
 private static CarRegistry _carRegistry = new CarRegistry(
     @"C:\Users\65942\OneDrive - Ngee Ann Polytechnic\Attachments\sem3\SWAD\SWAD_assg2\car_makes.txt",
     @"C:\Users\65942\OneDrive - Ngee Ann Polytechnic\Attachments\sem3\SWAD\SWAD_assg2\car_models.txt",
     @"C:\Users\65942\OneDrive - Ngee Ann Polytechnic\Attachments\sem3\SWAD\SWAD_assg2\car_listings.txt"
 );
 private static List<Car> _carOwnerCars = _carRegistry.GetAllCars();
+//--------------------------------------------------------------------------------------------------------------------------------------
 
-
-    DisplayWelcomeMessage();
 
 
     // Directly store car objects
@@ -97,21 +96,6 @@ static void DisplayWelcomeMessage()
                     break;
             }
         }
-    }
-
-    static void DisplayWelcomeMessage()
-    {
-        AnsiConsole.Write(
-            new FigletText("Welcome to")
-                .LeftJustified());
-        AnsiConsole.Write(
-            new FigletText("ICar")
-                .Centered()
-                .Color(Color.Aqua));
-        AnsiConsole.Write(
-            new FigletText("----------")
-                .LeftJustified()
-                .Color(Color.Teal));
     }
 
 static int DisplayMenu()
