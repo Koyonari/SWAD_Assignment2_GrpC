@@ -1,7 +1,5 @@
 ﻿using Spectre.Console;
 using SWAD_Assignment2_GrpC;
-using System;
-using System.Collections.Generic;
 
 class Program
 {

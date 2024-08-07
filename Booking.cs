@@ -1,6 +1,4 @@
-﻿using Spectre.Console;
-
-namespace SWAD_Assignment2_GrpC
+﻿namespace SWAD_Assignment2_GrpC
 {
     public class Booking
     {
@@ -141,7 +139,7 @@ namespace SWAD_Assignment2_GrpC
             }
         }
 
-        // Method to display oickup locations
+        // Method to display pickup locations
         public void DisplayPickupLocations() // Method by Aaron
         {
             Console.WriteLine("Available Pickup Locations:");
@@ -294,5 +292,17 @@ namespace SWAD_Assignment2_GrpC
         }
         // -----------------------------------------------------------------------------------------------
         // End of Aaron's methods
+
+        // Start of Yong Shyan's methods
+        // -----------------------------------------------------------------------------------------------
+        public float GetRentedHrs()
+        {
+            TimeSpan difference = EndBookingPeriod - StartBookingPeriod;
+            double hrs = difference.TotalHours;
+            float diff_hrs = (float) hrs;
+            return diff_hrs;
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Yong Shyan's methods
     }
 }

@@ -2,52 +2,36 @@
 {
     public class BookingLocation
     {
-        private string pickupLocation;
-        private string returnLocation;
-        private bool delivery;
-        private bool arrangedReturnLocation;
-        private float additionalPayment;
-
         // Properties
-        public string PickupLocation
-        {
-            get { return pickupLocation; }
-            set { pickupLocation = value; }
-        }
+        public string PickupLocation { get; set; }
 
-        public string ReturnLocation
-        {
-            get { return returnLocation; }
-            set { returnLocation = value; }
-        }
+        public string ReturnLocation { get; set; }
 
-        public bool Delivery
-        {
-            get { return delivery; }
-            set { delivery = value; }
-        }
+        public bool Delivery { get; set; }
 
-        public bool ArrangedReturnLocation
-        {
-            get { return arrangedReturnLocation; }
-            set { arrangedReturnLocation = value; }
-        }
+        public bool ArrangedReturnLocation { get; set; }
 
-        public float AdditionalPayment
-        {
-            get { return additionalPayment; }
-            set { additionalPayment = value; }
-        }
+        public float AdditionalPayment { get; set; }
 
         public BookingLocation() { }
+
         // Constructor
         public BookingLocation(string pickupLocation, string returnLocation, bool delivery, bool arrangedReturnLocation, float additionalPayment)
         {
-            this.pickupLocation = pickupLocation;
-            this.returnLocation = returnLocation;
-            this.delivery = delivery;
-            this.arrangedReturnLocation = arrangedReturnLocation;
-            this.additionalPayment = additionalPayment;
+            PickupLocation = pickupLocation;
+            ReturnLocation = returnLocation;
+            Delivery = delivery;
+            ArrangedReturnLocation = arrangedReturnLocation;
+            AdditionalPayment = additionalPayment;
         }
+
+        // Start of Yong Shyan's methods
+        // -----------------------------------------------------------------------------------------------
+        public float CheckForAdditionalFee()
+        {
+            return AdditionalPayment;
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Yong Shyan's methods
     }
 }

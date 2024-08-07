@@ -2,94 +2,43 @@
 {
     public class Car
     {
-        private string model;
-        private string make;
-        private int year;
-        private string status;
-        private int mileage;
-        private string listingName;
-        private string licensePlateNumber;
-        private bool insuranceStatus;
-        private string description;
-        private float rentalRate;
-
         // Properties
         public int Id { get; set; }
 
-        public string Model
-        {
-            get { return model; }
-            set { model = value; }
-        }
+        public string Model { get; set; }
 
-        public string Make
-        {
-            get { return make; }
-            set { make = value; }
-        }
+        public string Make { get; set; }
 
-        public int Year
-        {
-            get { return year; }
-            set { year = value; }
-        }
+        public int Year { get; set; }
 
-        public string Status
-        {
-            get { return status; }
-            set { status = value; }
-        }
+        public string Status { get; set; }
 
-        public int Mileage
-        {
-            get { return mileage; }
-            set { mileage = value; }
-        }
+        public int Mileage { get; set; }
 
-        public string ListingName
-        {
-            get { return listingName; }
-            set { listingName = value; }
-        }
+        public string ListingName { get; set; }
 
-        public string LicensePlateNumber
-        {
-            get { return licensePlateNumber; }
-            set { licensePlateNumber = value; }
-        }
+        public string LicensePlateNumber { get; set; }
 
-        public bool InsuranceStatus
-        {
-            get { return insuranceStatus; }
-            set { insuranceStatus = value; }
-        }
+        public bool InsuranceStatus { get; set; }
 
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
+        public string Description { get; set; }
 
-        public float RentalRate
-        {
-            get { return rentalRate; }
-            set { rentalRate = value; }
-        }
+        public float RentalRate { get; set; }
 
         // Constructor
         public Car(int id, string model, string make, int year, string status, int mileage, string listingName, string licensePlateNumber, bool insuranceStatus, string description, float rentalRate)
         {
             Id = id;
-            this.model = model;
-            this.make = make;
-            this.year = year;
-            this.status = status;
-            this.mileage = mileage;
-            this.listingName = listingName;
-            this.licensePlateNumber = licensePlateNumber;
-            this.insuranceStatus = insuranceStatus;
-            this.description = description;
-            this.rentalRate = rentalRate;
+            Model = model;
+            Make = make;
+            Year = year;
+            Status = status;
+            Mileage = mileage;
+            ListingName = listingName;
+            LicensePlateNumber = licensePlateNumber;
+            InsuranceStatus = insuranceStatus;
+            Description = description;
+            RentalRate = rentalRate;
         }
 
         // Aaron's Methods
@@ -110,5 +59,14 @@
         }
         // -----------------------------------------------------------------------------------------------
         // End of Aaron's methods
+
+        // Start of Yong Shyan's methods
+        // -----------------------------------------------------------------------------------------------
+        public float GetRentalRate()
+        {
+            return RentalRate;
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Yong Shyan's methods
     }
 }
