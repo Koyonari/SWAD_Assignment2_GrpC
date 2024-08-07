@@ -1,7 +1,5 @@
 ﻿using Spectre.Console;
-using SWAD_Assignment2_GrpC;
-using System;
-using System.Collections.Generic;
+
 
 
 
@@ -14,8 +12,8 @@ private static List<Car> _carOwnerCars = _carRegistry.GetAllCars();
 
 
     DisplayWelcomeMessage();
-class Program
-{
+
+
     // Directly store car objects
     static List<Car> carList = new List<Car>
     {
@@ -26,8 +24,7 @@ class Program
         new Car(5, "Model X", "Tesla", 2023, "Available", 8000, "Luxury SUV", "GHI6789", true, "Spacious and high-tech", 200.00f)
     };
 
-    static void Main(string[] args)
-    {
+
         DisplayWelcomeMessage();
 
     while (true)
@@ -616,4 +613,3 @@ static bool DisplayPenaltyAppeals()
                 return false;
         }
     }
-}
