@@ -1,19 +1,5 @@
 ﻿using Spectre.Console;
-using SWAD_Assignment2_GrpC;
-using System;
-using System.Collections.Generic;
 
-
-
-private static CarRegistry _carRegistry = new CarRegistry(
-    @"C:\Users\65942\OneDrive - Ngee Ann Polytechnic\Attachments\sem3\SWAD\SWAD_assg2\car_makes.txt",
-    @"C:\Users\65942\OneDrive - Ngee Ann Polytechnic\Attachments\sem3\SWAD\SWAD_assg2\car_models.txt",
-    @"C:\Users\65942\OneDrive - Ngee Ann Polytechnic\Attachments\sem3\SWAD\SWAD_assg2\car_listings.txt"
-);
-private static List<Car> _carOwnerCars = _carRegistry.GetAllCars();
-
-
-    DisplayWelcomeMessage();
 class Program
 {
     // Directly store car objects
@@ -26,8 +12,7 @@ class Program
         new Car(5, "Model X", "Tesla", 2023, "Available", 8000, "Luxury SUV", "GHI6789", true, "Spacious and high-tech", 200.00f)
     };
 
-    static void Main(string[] args)
-    {
+
         DisplayWelcomeMessage();
 
     while (true)
@@ -58,12 +43,6 @@ class Program
     }
     
 
-static void DisplayWelcomeMessage()
-{
-    AnsiConsole.Write(new FigletText("Welcome to").LeftJustified());
-    AnsiConsole.Write(new FigletText("ICar").Centered().Color(Color.Aqua));
-    AnsiConsole.Write(new FigletText("----------").LeftJustified().Color(Color.Teal));
-}
         while (true)
         {
             int menu_opt = DisplayMenu();
@@ -100,21 +79,6 @@ static void DisplayWelcomeMessage()
                     break;
             }
         }
-    }
-
-    static void DisplayWelcomeMessage()
-    {
-        AnsiConsole.Write(
-            new FigletText("Welcome to")
-                .LeftJustified());
-        AnsiConsole.Write(
-            new FigletText("ICar")
-                .Centered()
-                .Color(Color.Aqua));
-        AnsiConsole.Write(
-            new FigletText("----------")
-                .LeftJustified()
-                .Color(Color.Teal));
     }
 
 static int DisplayMenu()
@@ -389,20 +353,6 @@ static void EditListing(Car car)
         return;
     }
 
-    // Update the car details
-    car.Make = newMake;
-    car.Model = newModel;
-    car.Year = newYear;
-    car.Status = "Available";
-    car.Mileage = newMileage;
-    car.ListingName = newListingName;
-    car.LicensePlateNumber = newLicensePlateNumber;
-    car.InsuranceStatus = newInsuranceStatus;
-    car.Description = newDescription;
-    car.RentalRates.DailyRate = newDailyRate;
-
-    Console.WriteLine("Car listing updated successfully!");
-}
     static int DisplayMenu()
     {
         var choice = AnsiConsole.Prompt(
@@ -616,4 +566,3 @@ static bool DisplayPenaltyAppeals()
                 return false;
         }
     }
-}
