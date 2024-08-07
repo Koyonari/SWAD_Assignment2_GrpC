@@ -40,7 +40,7 @@ static int DisplayMenu()
 {
     var choice = AnsiConsole.Prompt(
         new SelectionPrompt<string>()
-            .Title("Hello, what are we going to be [green]doing here[/] today?")
+            .Title("\nHello, what are we going to be [green]doing here[/] today?")
             .PageSize(10)
             .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
             .AddChoices(new[] {
