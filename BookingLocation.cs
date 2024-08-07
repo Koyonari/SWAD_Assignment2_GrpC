@@ -39,6 +39,7 @@
             set { additionalPayment = value; }
         }
 
+        public BookingLocation() { }
         // Constructor
         public BookingLocation(string pickupLocation, string returnLocation, bool delivery, bool arrangedReturnLocation, float additionalPayment)
         {
