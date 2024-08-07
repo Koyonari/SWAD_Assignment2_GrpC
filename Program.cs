@@ -41,11 +41,8 @@ class Program
                     // Add renter registration logic here
                     break;
                 case 5:
-                    if (DisplayPenaltyAppeals())
-                    {
-                        // If true is returned, exit the program
-                        return; // Exits the loop and program
-                    }
+                    Console.WriteLine("[[5]] Review Appeal");
+                    DisplayPenaltyAppeals();
                     break;
                 case 6:
                     Console.WriteLine("Exited...");
@@ -214,37 +211,172 @@ class Program
     // -----------------------------------------------------------------------------------------------
     // End of Aaron's methods
 
+    // Casey's methods
+    // -----------------------------------------------------------------------------------------------
     static bool DisplayPenaltyAppeals()
     {
-        var choice = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title("Displaying Penalty Appeals")
-                .AddChoices(new[] {
-                    "[[1]] Appealing for Penalty #00001 (19/04/2024)",
-                    "[[2]] Appealing for Penalty #00002 (12/03/2024)",
-                    "[[3]] Appealing for Penalty #00003 (10/02/2024)",
-                    "[[4]] Appealing for Penalty #00004 (29/01/2024)"
-                }));
-        switch (choice[2] - '0')
+        Admin admin = new Admin(1);
+        List<AppealPenalty> appeals = new List<AppealPenalty>();
+
+        CarRenter renter1 = new CarRenter(1, "123 Main St", "mickey@gmail.com", "mickey123", 12345678, "Mickey Banana", DateTime.Now);
+        CarRenter renter2 = new CarRenter(2, "456 Elm St", "john@gmail.com", "john123", 87654321, "Long John", DateTime.Now);
+
+        CarOwner owner1 = new CarOwner(3, "789 Oak St", "peter@gmail.com", "peter123", 90123456, "Peter Rock", DateTime.Now);
+        CarOwner owner2 = new CarOwner(4, "101 Pine St", "jane@gmail.com", "jane123", 78901234, "Jane Mary", DateTime.Now);
+
+        Penalty penalty1 = new Penalty(1, 50.0f, "Late return", "Vehicle returned 2 hours late", DateTime.Now.AddDays(30), null);
+        Penalty penalty2 = new Penalty(2, 100.0f, "Damage to car", "Scratch on left door", DateTime.Now.AddDays(30), null);
+        Penalty penalty3 = new Penalty(3, 75.0f, "Excessive mileage", "Mileage exceeded limit", DateTime.Now.AddDays(30), null);
+        Penalty penalty4 = new Penalty(4, 200.0f, "Late payment", "Payment overdue by 2 weeks", DateTime.Now.AddDays(30), null);
+
+        appeals.Add(new AppealPenalty(1, "Late return", renter1, penalty1, DateTime.Now, "Available", "Traffic jam"));
+        appeals.Add(new AppealPenalty(2, "Damage to car", renter2, penalty2, DateTime.Now, "Available", "Pre-existing damage"));
+        appeals.Add(new AppealPenalty(3, "Excessive mileage", owner1, penalty3, DateTime.Now, "Available", "Unforeseen circumstances"));
+        appeals.Add(new AppealPenalty(4, "Late payment", owner2, penalty4, DateTime.Now, "Available", "Financial difficulties"));
+
+        // Display Appeal List
+        admin.DisplayAppealsList(appeals);
+
+        // Prompt appeal
+        AppealPenalty selectedAppeal = admin.SelectAppeal(appeals);
+
+        Console.WriteLine();
+        selectedAppeal.DisplayInformation();
+        Console.WriteLine();
+
+        if (selectedAppeal.Appellant is CarRenter)
         {
-            case 1:
-                Console.WriteLine("Penalty #00001 (19/04/2024)\nReason: First time returning car late - Car Owner (Available)");
-                Console.WriteLine("User ID:00029 \nAddress: Singapore Zoo Blk 29 St 10 #01-102 \nEmail: johncena@gmail.com \nUsername: BigJohn \nContact number: 90211239 \nFull Name: John Tan \nDate Joined: 07/08/2020");
-                return false;
-            case 2:
-                Console.WriteLine($"Penalty #00002 (12/03/2024)\nReason: Damages to rental car - Renter (Available)");
-                Console.WriteLine("User ID:00045 \nAddress: Marina Bay Sands Tower 3 #35-301 \nEmail: emilywong@hotmail.com \nUsername: SingaporeStar \nContact number: 91234567 \nFull Name: Emily Wong \nDate Joined: 15/03/2022");
-                return false;
-            case 3:
-                Console.WriteLine($"Penalty #00003 (10/02/2024)\nReason: Late payment - Car Owner (Available)");
-                Console.WriteLine("User ID:00078 \nAddress: Changi Airport Terminal 4 Staff Quarters #02-15 \nEmail: pilotlee@yahoo.com \nUsername: SkyKing88 \nContact number: 98765432 \nFull Name: Alex Lee \nDate Joined: 22/11/2021");
-                return false;
-            case 4:
-                Console.WriteLine($"Penalty #00004 (29/01/2024)\nReason: Excessive mileage - Renter (Available)");
-                Console.WriteLine("User ID:00103 \nAddress: Sentosa Cove Ocean Drive 18 \nEmail: mariatan@gmail.com \nUsername: BeachLover \nContact number: 93456789 \nFull Name: Maria Tan \nDate Joined: 01/06/2023");
-                return false;
-            default:
-                return false;
+            ProcessRenterAppeal(admin, selectedAppeal, appeals);
+        }
+        else if (selectedAppeal.Appellant is CarOwner)
+        {
+            ProcessCarOwnerAppeal(admin, selectedAppeal, appeals);
+        }
+
+        return true; // Return true to indicate successful execution
+    }
+
+    static void ProcessRenterAppeal(Admin admin, AppealPenalty selectedAppeal, List<AppealPenalty> appeals)
+    {
+        CarRenter renter = (CarRenter)selectedAppeal.Appellant;
+        renter.DisplayInformation();
+
+        Console.WriteLine("\nSystem prompts verification");
+        bool isInfoConfirmed = admin.ConfirmRenterInformation(renter);
+
+        if (isInfoConfirmed)
+        {
+            Console.WriteLine();
+            renter.DisplayAppealHistory();
+        }
+        else
+        {
+            UpdateRenterInformation(renter);
+        }
+
+        ProcessAppealDecision(admin, selectedAppeal, appeals);
+    }
+
+    static void ProcessCarOwnerAppeal(Admin admin, AppealPenalty selectedAppeal, List<AppealPenalty> appeals)
+    {
+        CarOwner owner = (CarOwner)selectedAppeal.Appellant;
+        owner.DisplayInformation();
+
+        Console.WriteLine("\nSystem prompts verification");
+        bool isInfoConfirmed = admin.ConfirmCarOwnerInformation(owner);
+
+        if (isInfoConfirmed)
+        {
+            Console.WriteLine();
+            owner.DisplayAppealHistory();
+        }
+        else
+        {
+            UpdateCarOwnerInformation(owner);
+        }
+
+        ProcessAppealDecision(admin, selectedAppeal, appeals);
+    }
+
+    static void ProcessAppealDecision(Admin admin, AppealPenalty selectedAppeal, List<AppealPenalty> appeals)
+    {
+        bool isAccepted = admin.DecideOnAppeal();
+
+        if (isAccepted)
+        {
+            Console.WriteLine("\nSystem prompts for confirmation");
+            bool isConfirmed = admin.ConfirmDecision();
+
+            Console.WriteLine();
+            if (isConfirmed)
+            {
+                Console.WriteLine("Appeal Accepted");
+                selectedAppeal.UpdateStatus("Accepted");
+                admin.SendAppealStatusEmail(selectedAppeal.Appellant, "Accepted");
+                appeals.Remove(selectedAppeal);
+            }
+        }
+        else
+        {
+            Console.WriteLine();
+            Console.WriteLine("Appeal Rejected");
+            selectedAppeal.UpdateStatus("Rejected");
+            admin.SendAppealStatusEmail(selectedAppeal.Appellant, "Rejected");
         }
     }
+
+    static void UpdateRenterInformation(CarRenter renter)
+    {
+        Console.WriteLine("Renter information:");
+        Console.WriteLine($"Name: {renter.Name}");
+        Console.WriteLine($"Email: {renter.Email}");
+        Console.WriteLine($"Prime Status: {renter.PrimeStatus}");
+        Console.WriteLine($"Eligibility: {renter.Eligibility}");
+
+        Console.WriteLine();
+        Console.Write("Enter updated name: ");
+        string updatedName = Console.ReadLine();
+        Console.Write("Enter updated email: ");
+        string updatedEmail = Console.ReadLine();
+        Console.Write("Enter updated prime status (y/n): ");
+        bool updatedPrimeStatus = Console.ReadLine().ToLower() == "y";
+        Console.Write("Enter updated eligibility (y/n): ");
+        bool updatedEligibility = Console.ReadLine().ToLower() == "y";
+
+        renter.Name = updatedName;
+        renter.Email = updatedEmail;
+        renter.PrimeStatus = updatedPrimeStatus;
+        renter.Eligibility = updatedEligibility;
+
+        Console.WriteLine();
+        Console.WriteLine("-------- Updated renter information ----------");
+        renter.DisplayInformation();
+        Console.WriteLine();
+        renter.DisplayAppealHistory();
+    }
+
+    static void UpdateCarOwnerInformation(CarOwner owner)
+    {
+        Console.WriteLine("Car Owner information:");
+        Console.WriteLine($"Name: {owner.Name}");
+        Console.WriteLine($"Email: {owner.Email}");
+        Console.WriteLine($"Number of Listings: {owner.Listings.Count}");
+
+        Console.WriteLine();
+        Console.Write("Enter updated name: ");
+        string updatedName = Console.ReadLine();
+        Console.Write("Enter updated email: ");
+        string updatedEmail = Console.ReadLine();
+
+        owner.Name = updatedName;
+        owner.Email = updatedEmail;
+
+        Console.WriteLine();
+        Console.WriteLine("-------- Updated car owner information ----------");
+        owner.DisplayInformation();
+        Console.WriteLine();
+        owner.DisplayAppealHistory();
+    }
+    // -----------------------------------------------------------------------------------------------
+    // End of Casey's methods
 }

@@ -6,17 +6,35 @@ using System.Threading.Tasks;
 
 namespace SWAD_Assignment2_GrpC
 {
-    public class CarOwner
+    public class CarOwner : User
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
+        public List<Car> Listings { get; set; }
 
-        public List<Car> RegisteredCars { get; } = new List<Car>();
-
-        public void AddCar(Car car)
+        public CarOwner(int id, string name, string email, string username, int contactNumber, string address, DateTime dateJoined)
+            : base(id, name, email, username, contactNumber, address, dateJoined)
         {
-            RegisteredCars.Add(car);
+            Listings = new List<Car>();
         }
+
+
+        // Casey's Methods
+        // -----------------------------------------------------------------------------------------------
+        public void DisplayInformation()
+        {
+            Console.WriteLine($"Car Owner ID: {Id}");
+            Console.WriteLine($"Name: {Name}");
+            Console.WriteLine($"Email: {Email}");
+            Console.WriteLine($"Contact Number: {ContactNumber}");
+            Console.WriteLine($"Address: {Address}");
+            Console.WriteLine($"Date Joined: {DateJoined}");
+            Console.WriteLine($"Number of Listings: {Listings.Count}");
+        }
+
+        public void DisplayAppealHistory()
+        {
+            Console.WriteLine("Car Owner Appeal History:");
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Casey's methods
     }
 }

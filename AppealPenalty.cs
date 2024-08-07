@@ -6,53 +6,45 @@ using System.Threading.Tasks;
 
 namespace SWAD_Assignment2_GrpC
 {
-    internal class AppealPenalty
+    public class AppealPenalty
     {
-        private string appealReason;
-        private DateTime appealDate;
-        private bool appealStatus;
-        private bool appealDecision;
-        private Penalty chosenPenalty;
+        public int Id { get; set; }
+        public string AppealReason { get; set; }
+        public User Appellant { get; set; }
+        public Penalty Penalty { get; set; }
+        public DateTime AppealDate { get; set; }
+        public string AppealStatus { get; set; }
+        public string AppealDescription { get; set; }
 
-        //Properties
-        public string AppealReason
+        public AppealPenalty(int id, string appealReason, User appellant, Penalty penalty, DateTime appealDate, string appealStatus, string appealDescription)
         {
-            get { return appealReason; }
-            set { appealReason = value; }
+            Id = id;
+            AppealReason = appealReason;
+            Appellant = appellant;
+            Penalty = penalty;
+            AppealDate = appealDate;
+            AppealStatus = appealStatus;
+            AppealDescription = appealDescription;
         }
 
-        public DateTime AppealDate
+        // Casey's Methods
+        // -----------------------------------------------------------------------------------------------
+        public void DisplayInformation()
         {
-            get { return appealDate; }
-            set { appealDate = value; }
+            Console.WriteLine($"Appeal Information:\nReason: {AppealReason}\nAmount: ${Penalty.PenaltyAmount}\nStatus: {AppealStatus}\nDescription: {AppealDescription}");
         }
 
-        public bool AppealStatus
+        public void UpdateStatus(string newStatus)
         {
-            get { return appealStatus; }
-            set { appealStatus = value; }
+            AppealStatus = newStatus;
+            Console.WriteLine($"Appeal status updated to: {AppealStatus}");
         }
 
-        public bool AppealDecision
+        public string GetSummary()
         {
-            get { return appealDecision; }
-            set { appealDecision = value; }
+            return $"Appeal by {Appellant.Name} - Reason: {AppealReason}, Amount: ${Penalty.PenaltyAmount}";
         }
-
-        public Penalty ChosenPenalty
-        {
-            get { return chosenPenalty; }
-            set { chosenPenalty = value; }
-        }
-
-        //Constructor
-        public AppealPenalty(string appealReason, DateTime appealDate, bool appealStatus, bool appealDecision, Penalty chosenPenalty)
-        {
-            this.appealReason = appealReason;
-            this.appealDate = appealDate;
-            this.appealStatus = appealStatus;
-            this.appealDecision = appealDecision;
-            this.chosenPenalty = chosenPenalty;
-        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Casey's methods
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SWAD_Assignment2_GrpC
 {
-    internal class Penalty
+    public class Penalty
     {
         private int penaltyId;
         private float penaltyAmount;
@@ -15,7 +15,7 @@ namespace SWAD_Assignment2_GrpC
         private DateTime expirationDate;
         private Booking chosenBooking;
 
-        //Properties
+        // Properties
         public int PenaltyId
         {
             get { return penaltyId; }
@@ -49,10 +49,10 @@ namespace SWAD_Assignment2_GrpC
         public Booking ChosenBooking
         {
             get { return chosenBooking; }
-            set { chosenBooking = value;}
+            set { chosenBooking = value; }
         }
 
-        //Constructor
+        // Constructor
         public Penalty(int penaltyId, float penaltyAmount, string penaltyReason, string penaltyDescription, DateTime expirationDate, Booking chosenBooking)
         {
             this.penaltyId = penaltyId;
@@ -62,5 +62,26 @@ namespace SWAD_Assignment2_GrpC
             this.expirationDate = expirationDate;
             this.chosenBooking = chosenBooking;
         }
+
+
+        // Casey's Methods
+        // -----------------------------------------------------------------------------------------------
+        public void ApplyPenalty()
+        {
+            // Logic to apply the penalty
+            Console.WriteLine($"Penalty of ${penaltyAmount} applied for reason: {penaltyReason}");
+        }
+
+        public bool IsExpired()
+        {
+            return DateTime.Now > expirationDate;
+        }
+
+        public override string ToString()
+        {
+            return $"Penalty ID: {penaltyId}, Amount: ${penaltyAmount}, Reason: {penaltyReason}, Expires: {expirationDate.ToShortDateString()}";
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Casey's methods
     }
 }
