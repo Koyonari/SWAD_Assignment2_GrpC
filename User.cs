@@ -20,13 +20,13 @@
         // Constructor
         public User(int id, string address, string email, string username, int contactNumber, string name, DateTime dateJoined)
         {
-            this.Id = id;
-            this.Address = address;
-            this.Email = email;
-            this.Username = username;
-            this.ContactNumber = contactNumber;
-            this.Name = name;
-            this.DateJoined = dateJoined;
+            Id = id;
+            Address = address;
+            Email = email;
+            Username = username;
+            ContactNumber = contactNumber;
+            Name = name;
+            DateJoined = dateJoined;
         }
     }
 }
