@@ -97,5 +97,24 @@ namespace SWAD_Assignment2_GrpC
             this.description = description;
             this.rentalRate = rentalRate;
         }
+
+        // Aaron's Methods
+        // -----------------------------------------------------------------------------------------------
+        // Method to verify car status
+        public bool VerifyCarStatus()
+        {
+            if (Status == "Reserved" || Status == "Unavailable")
+            {
+                Console.WriteLine("Car is unavailable for reservation. Please select a different car.");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("The car is available for booking. You may proceed.");
+                return true;
+            }
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Aaron's methods
     }
 }
