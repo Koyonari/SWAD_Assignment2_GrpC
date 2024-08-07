@@ -17,73 +17,24 @@ namespace SWAD_Assignment2_GrpC
         private string licensePlateNumber;
         private bool insuranceStatus;
         private string description;
-        private float rentalRate;
+        private RentalRates rentalRates; // Updated to RentalRates
 
         // Properties
         public int Id { get; set; }
 
-        public string Model
-        {
-            get { return model; }
-            set { model = value; }
-        }
-
-        public string Make
-        {
-            get { return make; }
-            set { make = value; }
-        }
-
-        public int Year
-        {
-            get { return year; }
-            set { year = value; }
-        }
-
-        public string Status
-        {
-            get { return status; }
-            set { status = value; }
-        }
-
-        public int Mileage
-        {
-            get { return mileage; }
-            set { mileage = value; }
-        }
-
-        public string ListingName
-        {
-            get { return listingName; }
-            set { listingName = value; }
-        }
-
-        public string LicensePlateNumber
-        {
-            get { return licensePlateNumber; }
-            set { licensePlateNumber = value; }
-        }
-
-        public bool InsuranceStatus
-        {
-            get { return insuranceStatus; }
-            set { insuranceStatus = value; }
-        }
-
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
-
-        public float RentalRate
-        {
-            get { return rentalRate; }
-            set { rentalRate = value; }
-        }
+        public string Model { get; set; }
+        public string Make { get; set; }
+        public int Year { get; set; }
+        public string Status { get; set; }
+        public int Mileage { get; set; }
+        public string ListingName { get; set; }
+        public string LicensePlateNumber { get; set; }
+        public bool InsuranceStatus { get; set; }
+        public string Description { get; set; }
+        public RentalRates { get; set; } // Updated to RentalRates
 
         // Constructor
-        public Car(int id, string model, string make, int year, string status, int mileage, string listingName, string licensePlateNumber, bool insuranceStatus, string description, float rentalRate)
+        public Car(int id, string model, string make, int year, string status, int mileage, string listingName, string licensePlateNumber, bool insuranceStatus, string description, RentalRates rentalRates)
         {
             Id = id;
             this.model = model;
@@ -95,7 +46,7 @@ namespace SWAD_Assignment2_GrpC
             this.licensePlateNumber = licensePlateNumber;
             this.insuranceStatus = insuranceStatus;
             this.description = description;
-            this.rentalRate = rentalRate;
+            this.rentalRates = rentalRates;
         }
 
         // Aaron's Methods
@@ -117,4 +68,7 @@ namespace SWAD_Assignment2_GrpC
         // -----------------------------------------------------------------------------------------------
         // End of Aaron's methods
     }
+
+}
+
 }
