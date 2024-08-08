@@ -197,6 +197,7 @@ class Program
             booking.EnterDeliveryAddress();
             booking.VerifyDeliveryAddress();
             booking.UpdateDeliveryStatus();
+            booking.BookingLocations.AdditionalPayment = 20;
         }
         else
         {
@@ -205,6 +206,7 @@ class Program
 
         booking.DisplayReservationDetails();
         booking.ConfirmReservation();
+        booking.SaveBookingDetailsToFile();
     }
     // -----------------------------------------------------------------------------------------------
     // End of Aaron's methods

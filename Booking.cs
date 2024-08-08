@@ -277,6 +277,25 @@
             }
         }
 
+        public void SaveBookingDetailsToFile()
+        {
+            string filePath = @"C:\PRG2 stuff\BookingDetails.txt";
+
+            using (StreamWriter writer = new StreamWriter(filePath, true))
+            {
+                writer.WriteLine("Booking Details:");
+                writer.WriteLine($"Start Booking Period: {StartBookingPeriod.ToString("yyyy-MM-dd HH:mm")}");
+                writer.WriteLine($"End Booking Period: {EndBookingPeriod.ToString("yyyy-MM-dd HH:mm")}");
+                writer.WriteLine($"Car Make: {ChosenCar.Make}");
+                writer.WriteLine($"Car Model: {ChosenCar.Model}");
+                writer.WriteLine($"Pickup Location: {BookingLocations.PickupLocation}");
+                writer.WriteLine($"Additional Payment: ${BookingLocations.AdditionalPayment}");
+                writer.WriteLine("--------------------------------------------");
+            }
+
+            Console.WriteLine("Booking details saved to BookingDetails.txt.");
+        }
+
         // Method to update the status of the chosen car
         private void updateCarStatus() // Method by Aaron
         {
