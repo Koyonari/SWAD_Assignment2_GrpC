@@ -13,8 +13,13 @@ class Program
         new Car(5, "Model X", "Tesla", 2023, "Available", 8000, "Luxury SUV", "GHI6789", true, "Spacious and high-tech", 200.00f)
     };
 
+    // Store Booking objects
+    static List<Booking> bookings = new List<Booking>();
+
     static void Main(string[] args)
     {
+        string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
+        File.WriteAllText(filePath, string.Empty);
         DisplayWelcomeMessage();
 
         while (true)
@@ -105,17 +110,32 @@ class Program
 
     // Yong Shyan's methods
     // -----------------------------------------------------------------------------------------------
-    static void MakePayment()
+    void MakePayment()
     {
-        DisplayBookings();
+        if (bookings.Count > 0)
+        {
+            DisplayBookings();
 
-        //Prompt user to choose which Booking to make payment
-        Console.WriteLine("Select which booking to make payment");
-        int opt = PayBooking();
-        Console.WriteLine("You have selected option " + opt);
+            //Prompt user to choose which Booking to make payment
+            Console.WriteLine("Select which booking to make payment");
+            int opt = PayBooking();
+            Console.WriteLine("You have selected option " + opt);
+            Booking selectedBooking = bookings[opt-1];
+            float additionalFee = selectedBooking.BookingLocations.CheckForAdditionalFee();
+            float hrs = selectedBooking.GetRentedHrs();
+            float rate = selectedBooking.ChosenCar.GetRentalRate() / 24;
+            float currentPayment = additionalFee + hrs * rate;
+            Console.WriteLine("Your total current payment is S$" + currentPayment);
+
+        }
+        else
+        {
+            Console.WriteLine("You have 0 current bookings.");
+        }
+ 
     }
 
-    public static void DisplayBookings()
+    void DisplayBookings()
     {
         var table = new Table();
 
@@ -168,7 +188,7 @@ class Program
         AnsiConsole.Write(table);
     }
 
-    static int PayBooking()
+    int PayBooking()
     {
         // Read file
         string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
@@ -201,6 +221,76 @@ class Program
         return int.Parse(choice);
     }
 
+    bool CreditCardPayment()
+    {
+        Console.WriteLine("--- Payment by Credit Card ---\n");
+
+        // CC Number
+        Console.Write("6-digit Credit Card Number: ");
+        int ccn = int.Parse(Console.ReadLine());
+
+        // CC Expiry Date
+        Console.Write("Credit Card Expiration Date: ");
+        DateTime exp = Convert.ToDateTime(Console.ReadLine);
+
+        // CVV Number
+        Console.Write("Credit Card CVV: ");
+        int cvv = int.Parse(Console.ReadLine());
+
+        // CC Name
+        Console.Write("Credit Cardholder Name: ");
+        string cchn = Console.ReadLine();
+
+        // Make CreditCard object
+        CreditCard creditCardPayment = new CreditCard(ccn, exp, cvv, cchn);
+
+        bool response = true; //Process with the bank externally and get OK response
+
+        if (response == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    bool DigitalWalletPayment()
+    {
+        Console.WriteLine("--- Payment by Digital Wallet\n");
+
+        // Wallet Type
+        Console.Write("Wallet Type: ");
+        string walletType = Console.ReadLine();
+
+        // Wallet Name
+        Console.Write("Wallet Owner Name: ");
+        string walletName = Console.ReadLine();
+
+        // Wallet Username
+        Console.WriteLine("Log in with " + walletType);
+        Console.Write("Wallet Username: ");
+        string walletUsername = Console.ReadLine();
+
+        // Wallet password
+        Console.Write("Wallet Password: ");
+        string walletPassword = Console.ReadLine();
+
+        // Make DigitalWallet object
+        DigitalWallet digitalWalletPayment = new DigitalWallet(walletType, walletName, walletUsername, walletPassword);
+        
+        bool response = true; //Process with the bank externally and get OK response
+
+        if (response == true)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     // -----------------------------------------------------------------------------------------------
     // End of Yong Shyan's methods
 
@@ -307,6 +397,7 @@ class Program
         booking.DisplayReservationDetails();
         booking.ConfirmReservation();
         booking.SaveBookingDetailsToFile();
+        bookings.Add(booking);
     }
     // -----------------------------------------------------------------------------------------------
     // End of Aaron's methods
