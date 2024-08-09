@@ -110,7 +110,7 @@ class Program
 
     // Yong Shyan's methods
     // -----------------------------------------------------------------------------------------------
-    void MakePayment()
+    static void MakePayment()
     {
         if (bookings.Count > 0)
         {
@@ -135,7 +135,7 @@ class Program
  
     }
 
-    void DisplayBookings()
+    static void DisplayBookings()
     {
         var table = new Table();
 
@@ -188,7 +188,7 @@ class Program
         AnsiConsole.Write(table);
     }
 
-    int PayBooking()
+    static int PayBooking()
     {
         // Read file
         string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
@@ -221,7 +221,7 @@ class Program
         return int.Parse(choice);
     }
 
-    bool CreditCardPayment()
+    static bool CreditCardPayment()
     {
         Console.WriteLine("--- Payment by Credit Card ---\n");
 
@@ -256,7 +256,7 @@ class Program
         }
     }
 
-    bool DigitalWalletPayment()
+    static bool DigitalWalletPayment()
     {
         Console.WriteLine("--- Payment by Digital Wallet\n");
 
