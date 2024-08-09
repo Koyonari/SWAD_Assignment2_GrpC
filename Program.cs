@@ -23,23 +23,22 @@ class Program
             switch (menu_opt)
             {
                 case 1:
-                    Console.WriteLine("[[1]] Register Vehicle");
-                    // Add registration logic here
+                    Console.WriteLine("[1] Register Vehicle");
                     break;
                 case 2:
-                    Console.WriteLine("[[2]] Make Payment");
-                    // Add payment logic here
+                    Console.WriteLine("[2] Make Payment\n");
+                    MakePayment();
                     break;
                 case 3:
-                    Console.WriteLine("[[3]] Reserve Vehicle");
+                    Console.WriteLine("[3] Reserve Vehicle");
                     ReserveVehicle();
                     break;
                 case 4:
-                    Console.WriteLine("[[4]] Register Renter");
+                    Console.WriteLine("[4] Register Renter");
                     // Add renter registration logic here
                     break;
                 case 5:
-                    Console.WriteLine("[[5]] Review Appeal");
+                    Console.WriteLine("[5] Review Appeal");
                     DisplayPenaltyAppeals();
                     break;
                 case 6:
@@ -71,7 +70,7 @@ class Program
     {
         var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
-                .Title("Hello, what are we going to be [green]doing here[/] today?")
+                .Title("\nHello, what are we going to be [green]doing here[/] today?")
                 .PageSize(10)
                 .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
                 .AddChoices(new[] {
@@ -103,6 +102,107 @@ class Program
             Console.WriteLine("--------------------------------------------");
         }
     }
+
+    // Yong Shyan's methods
+    // -----------------------------------------------------------------------------------------------
+    static void MakePayment()
+    {
+        DisplayBookings();
+
+        //Prompt user to choose which Booking to make payment
+        Console.WriteLine("Select which booking to make payment");
+        int opt = PayBooking();
+        Console.WriteLine("You have selected option " + opt);
+    }
+
+    public static void DisplayBookings()
+    {
+        var table = new Table();
+
+        // Add columns
+        table.AddColumn("No.");
+        table.AddColumn("Start Booking Period");
+        table.AddColumn("End Booking Period");
+        table.AddColumn("Car Make");
+        table.AddColumn("Car Model");
+        table.AddColumn("Pickup Location");
+        table.AddColumn("Additional Payment");
+
+        // Read file
+        string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
+        string[] lines = File.ReadAllLines(filePath);
+        int bookingNumber = 1;
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (lines[i].StartsWith("Start Booking Period:"))
+            {
+                string startBookingPeriod = lines[i].Split(":", 2)[1].Trim();
+                string endBookingPeriod = lines[i + 1].Split(":", 2)[1].Trim();
+                string carMake = lines[i + 2].Split(":", 2)[1].Trim();
+                string carModel = lines[i + 3].Split(":", 2)[1].Trim();
+                string pickupLocation = lines[i + 4].Split(":", 2)[1].Trim();
+                string additionalPayment = lines[i + 5].Split(":", 2)[1].Trim();
+
+                // Add a rows
+                table.AddRow(
+                    bookingNumber.ToString(),
+                    startBookingPeriod,
+                    endBookingPeriod,
+                    carMake,
+                    carModel,
+                    pickupLocation,
+                    additionalPayment
+                );
+
+                bookingNumber++;
+                i += 6; // Skip past the processed booking details
+            }
+        }
+
+        table.Title = new TableTitle("Booking Details");
+        table.Border(TableBorder.Rounded);
+        table.Centered();
+
+        // Display the table
+        AnsiConsole.Write(table);
+    }
+
+    static int PayBooking()
+    {
+        // Read file
+        string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
+        string[] lines = File.ReadAllLines(filePath);
+
+        // Create a list to hold the booking options
+        var bookingOptions = new List<string>();
+
+        // Count the number of booking entries and generate options
+        int bookingNumber = 1;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            if (lines[i].StartsWith("Start Booking Period:"))
+            {
+                bookingOptions.Add($"{bookingNumber}");
+                bookingNumber++;
+                i += 6; // Skip past the processed booking details
+            }
+        }
+
+        // Booking selection menu
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Please select a booking to [green]make payment[/]")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+                .AddChoices(bookingOptions));
+
+        // Convert the selected choice to an integer and return
+        return int.Parse(choice);
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // End of Yong Shyan's methods
 
     // Aaron's methods
     // -----------------------------------------------------------------------------------------------
