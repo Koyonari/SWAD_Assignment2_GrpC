@@ -1,0 +1,16 @@
+Booking Details:
+Start Booking Period: 2024-09-28 00:00
+End Booking Period: 2024-09-29 00:00
+Car Make: Tesla
+Car Model: Model S
+Pickup Location: Downtown iCar Station
+Additional Payment: $0
+--------------------------------------------
+Booking Details:
+Start Booking Period: 2024-09-28 00:00
+End Booking Period: 2024-09-29 00:00
+Car Make: Toyota
+Car Model: Corolla
+Pickup Location: Changi iCar Station
+Additional Payment: $0
+--------------------------------------------

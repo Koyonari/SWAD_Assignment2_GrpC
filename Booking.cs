@@ -279,8 +279,9 @@
 
         public void SaveBookingDetailsToFile()
         {
-            string filePath = @"C:\PRG2 stuff\BookingDetails.txt";
+            string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
 
+            // Combine the base directory with the relative path to form the full path
             using (StreamWriter writer = new StreamWriter(filePath, true))
             {
                 writer.WriteLine("Booking Details:");
