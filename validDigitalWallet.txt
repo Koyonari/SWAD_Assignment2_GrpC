@@ -1,0 +1,4 @@
+Wallet Type: PayPal
+Wallet Owner Name: An Yong Shyan
+Wallet Username: ys123
+Wallet Password: ys123!

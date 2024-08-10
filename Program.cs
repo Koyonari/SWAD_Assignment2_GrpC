@@ -127,6 +127,22 @@ class Program
             float currentPayment = additionalFee + hrs * rate;
             Console.WriteLine("Your total current payment is S$" + currentPayment);
 
+            if (currentPayment > 0)
+            {
+                int paymentOpt = PaymentMethod();
+                if (paymentOpt == 1)
+                {
+                    CreditCardPayment();
+                }
+                else if (paymentOpt == 2)
+                {
+                    DigitalWalletPayment();
+                }
+                else
+                {
+                    Console.WriteLine("Invalid payment method.");
+                }
+            }
         }
         else
         {
@@ -221,17 +237,32 @@ class Program
         return int.Parse(choice);
     }
 
+    // Menu to choose payment method
+    static int PaymentMethod()
+    {
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("\nChoose your [green]payment method[/]")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down to reveal more choices)[/]")
+                .AddChoices(new[] {
+                    "[[1]] Credit Card",
+                    "[[2]] Digital Wallet"
+                }));
+        return choice[2] - '0';
+    }
+
     static bool CreditCardPayment()
     {
         Console.WriteLine("--- Payment by Credit Card ---\n");
 
         // CC Number
-        Console.Write("6-digit Credit Card Number: ");
-        int ccn = int.Parse(Console.ReadLine());
+        Console.Write("16-digit Credit Card Number: ");
+        long ccn = long.Parse(Console.ReadLine());
 
         // CC Expiry Date
         Console.Write("Credit Card Expiration Date: ");
-        DateTime exp = Convert.ToDateTime(Console.ReadLine);
+        DateTime exp = Convert.ToDateTime(Console.ReadLine());
 
         // CVV Number
         Console.Write("Credit Card CVV: ");
@@ -244,16 +275,48 @@ class Program
         // Make CreditCard object
         CreditCard creditCardPayment = new CreditCard(ccn, exp, cvv, cchn);
 
-        bool response = true; //Process with the bank externally and get OK response
+        // Make CreditCard list for validation
+        List<CreditCard> creditCards = new List<CreditCard>();
 
-        if (response == true)
+        // Simulate Process with the bank externally and get OK response
+        string validCCPath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\validCreditCard.txt";
+        string[] lines = File.ReadAllLines(validCCPath);
+
+        for (int i = 0; i < lines.Length; i += 4)
         {
-            return true;
+            // Extract and trim details from each line
+            long valid_ccn = long.Parse(lines[i].Split(':')[1].Trim());
+            DateTime valid_exp = Convert.ToDateTime(lines[i + 1].Split(':')[1].Trim());
+            int valid_cvv = int.Parse(lines[i + 2].Split(':')[1].Trim());
+            string valid_cchn = lines[i + 3].Split(':')[1].Trim();
+
+            // Make CreditCard object to add to list of valid credit cards
+            CreditCard validCreditCard = new CreditCard(valid_ccn, valid_exp, valid_cvv, valid_cchn);
+            creditCards.Add(validCreditCard);
+        }
+
+        // Check if the input credit card matches any in the valid list
+        bool valid = false;
+        foreach (CreditCard validCard in creditCards)
+        {
+            if (creditCardPayment.CreditCardNumber == validCard.CreditCardNumber &&
+                creditCardPayment.ExpirationDate == validCard.ExpirationDate &&
+                creditCardPayment.CvvNumber == validCard.CvvNumber &&
+                creditCardPayment.CardholderName.Trim().ToLower().Equals(validCard.CardholderName.Trim().ToLower()))
+            {
+                valid = true; // Match found
+            }
+        }
+
+        if (valid == true)
+        {
+            Console.WriteLine("Credit Card details are correct!");
         }
         else
         {
-            return false;
+            Console.WriteLine("Incorrect credit card details. Try again.");
         }
+        return valid;
     }
 
     static bool DigitalWalletPayment()
