@@ -353,7 +353,8 @@ class Program
         string walletName = Console.ReadLine();
 
         // Wallet Username
-        Console.WriteLine("Log in with " + walletType);
+        string capitalizedWalletType = char.ToUpper(walletType[0]) + walletType.Substring(1);
+        Console.WriteLine("\nLog in with " + capitalizedWalletType);
         Console.Write("Wallet Username: ");
         string walletUsername = Console.ReadLine();
 
@@ -363,17 +364,51 @@ class Program
 
         // Make DigitalWallet object
         DigitalWallet digitalWalletPayment = new DigitalWallet(walletType, walletName, walletUsername, walletPassword);
-        
-        bool response = true; //Process with the bank externally and get OK response
 
-        if (response == true)
+        // Make DigitalWallet list for validation
+        List<DigitalWallet> digitalWallets = new List<DigitalWallet>();
+
+        //Simulate process with the digital wallet externally and get OK response
+        string validCCPath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\validDigitalWallet.txt";
+        string[] lines = File.ReadAllLines(validCCPath);
+
+        for (int i = 0; i < lines.Length; i += 4)
         {
-            return true;
+            // Extract and trim details from each line
+            string validWalletType = lines[i].Split(':')[1].Trim();
+            string validWalletOwnerName = lines[i + 1].Split(':')[1].Trim();
+            string validWalletUsername = lines[i + 2].Split(':')[1].Trim();
+            string validWalletPassword = lines[i + 3].Split(':')[1].Trim();
+
+            // Make CreditCard object to add to list of valid credit cards
+            DigitalWallet validDigitalWallet = new DigitalWallet(validWalletType, validWalletOwnerName, validWalletUsername, validWalletPassword);
+            digitalWallets.Add(validDigitalWallet);
+        }
+
+        // Check if the input credit card matches any in the valid list
+        bool valid = false;
+        foreach (DigitalWallet digitalWallet in digitalWallets)
+        {
+            if (digitalWalletPayment.WalletType.Trim().ToLower() == digitalWallet.WalletType.Trim().ToLower() &&
+                digitalWalletPayment.WalletOwnerName.Trim().ToLower() == digitalWallet.WalletOwnerName.Trim().ToLower() &&
+                digitalWalletPayment.WalletUsername.Equals(digitalWallet.WalletUsername) &&
+                digitalWalletPayment.WalletPassword.Equals(digitalWallet.WalletPassword))
+            {
+                valid = true; // Match found
+            }
+        }
+
+        if (valid == true)
+        {
+            string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
+            File.WriteAllText(filePath, string.Empty);
+            Console.WriteLine("Digital Wallet details are correct! You have " + CountBookings(filePath) + " oustanding payments.");
         }
         else
         {
-            return false;
+            Console.WriteLine("Incorrect digital wallet details. Try again.");
         }
+        return valid;
     }
     // -----------------------------------------------------------------------------------------------
     // End of Yong Shyan's methods
