@@ -127,21 +127,34 @@ class Program
             float currentPayment = additionalFee + hrs * rate;
             Console.WriteLine("Your total current payment is S$" + currentPayment);
 
+            bool paymentComplete = false;
             if (currentPayment > 0)
             {
                 int paymentOpt = PaymentMethod();
                 if (paymentOpt == 1)
                 {
-                    CreditCardPayment();
+                    if (CreditCardPayment() == true)
+                    {
+                        paymentComplete = true;
+                    };
                 }
                 else if (paymentOpt == 2)
                 {
-                    DigitalWalletPayment();
+                    if (DigitalWalletPayment() == true)
+                    {
+                        paymentComplete= true;
+                    };
                 }
                 else
                 {
                     Console.WriteLine("Invalid payment method.");
                 }
+            }
+
+            if (paymentComplete == true)
+            {
+                Console.WriteLine("Booking made successfully.");
+                selectedBooking.EmailReceipt(paymentComplete, currentPayment);
             }
         }
         else
@@ -261,7 +274,7 @@ class Program
         long ccn = long.Parse(Console.ReadLine());
 
         // CC Expiry Date
-        Console.Write("Credit Card Expiration Date: ");
+        Console.Write("Credit Card Expiration Date (yyyy-MM-dd): ");
         DateTime exp = Convert.ToDateTime(Console.ReadLine());
 
         // CVV Number
@@ -342,7 +355,7 @@ class Program
 
     static bool DigitalWalletPayment()
     {
-        Console.WriteLine("--- Payment by Digital Wallet\n");
+        Console.WriteLine("--- Payment by Digital Wallet ---\n");
 
         // Wallet Type
         Console.Write("Wallet Type: ");
