@@ -310,13 +310,34 @@ class Program
 
         if (valid == true)
         {
-            Console.WriteLine("Credit Card details are correct!");
+            string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
+            File.WriteAllText(filePath, string.Empty);
+            Console.WriteLine("Credit Card details are correct! You have " + CountBookings(filePath) + " oustanding payments.");
         }
         else
         {
             Console.WriteLine("Incorrect credit card details. Try again.");
         }
         return valid;
+    }
+    static int CountBookings(string filePath)
+    {
+        // Initialize booking count
+        int bookingCount = 0;
+
+        // Read all lines from the file
+        string[] lines = File.ReadAllLines(filePath);
+
+        // Count occurrences of "Booking Details:"
+        foreach (string line in lines)
+        {
+            if (line.Trim() == "Booking Details:")
+            {
+                bookingCount++;
+            }
+        }
+
+        return bookingCount;
     }
 
     static bool DigitalWalletPayment()

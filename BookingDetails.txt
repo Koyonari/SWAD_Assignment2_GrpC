@@ -1,8 +1,0 @@
-Booking Details:
-Start Booking Period: 2024-08-28 00:00
-End Booking Period: 2024-08-29 00:00
-Car Make: Tesla
-Car Model: Model S
-Pickup Location: co
-Additional Payment: $20
---------------------------------------------
