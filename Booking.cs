@@ -330,26 +330,6 @@
                 Console.WriteLine("\n------ Email Receipt ------\nBooking made successfully! Payment of $" + paymentAmount + " has been successful.");
             }
         }
-
-        public int CountBookings(Booking selectedBooking, string filePath)
-        {
-            // Initialize booking count
-            int bookingCount = 0;
-
-            // Read all lines from the file
-            string[] lines = File.ReadAllLines(filePath);
-
-            // Count occurrences of "Booking Details:"
-            foreach (string line in lines)
-            {
-                if (line.Trim() == "Booking Details:")
-                {
-                    bookingCount++;
-                }
-            }
-
-            return bookingCount;
-        }
         // -----------------------------------------------------------------------------------------------
         // End of Yong Shyan's methods
     }

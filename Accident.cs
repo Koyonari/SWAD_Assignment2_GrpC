@@ -1,44 +1,20 @@
 ﻿namespace SWAD_Assignment2_GrpC
 {
-    internal class Accident
+    public class Accident
     {
-        private string location;
-        private DateTime time;
-        private string type;
-        private Booking chosenBooking;
-
         //Properties
-        public string Location
-        {
-            get { return location; }
-            set { location = value; }
-        }
-
-        public DateTime Time
-        {
-            get { return time; }
-            set { time = value; }
-        }
-
-        public string Type
-        {
-            get { return type; }
-            set { type = value; }
-        }
-
-        public Booking ChosenBooking
-        {
-            get { return chosenBooking; }
-            set { chosenBooking = value; }
-        }
+        public string Location { get; set; }
+        public DateTime Time { get; set; }
+        public string Type { get; set; }
+        public Booking ChosenBooking { get; set; }
 
         //Constructor
         public Accident(string location, DateTime time, string type, Booking chosenBooking)
         {
-            this.location = location;
-            this.time = time;
-            this.type = type;
-            this.chosenBooking = chosenBooking;
+            Location = location;
+            Time = time;
+            Type = type;
+            ChosenBooking = chosenBooking;
         }
     }
 }
