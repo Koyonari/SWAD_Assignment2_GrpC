@@ -7,6 +7,7 @@
         public DateTime DateOfBirth { get; set; }
         public bool DriverLicense { get; set; }
         public float MonthlyExpenditure { get; set; }
+        public List<Booking> Bookings { get; set; } = new List<Booking>();
 
         public CarRenter(int id, string address, string email, string username, int contactNumber, string name, DateTime dateJoined)
             : base(id, address, email, username, contactNumber, name, dateJoined)
@@ -18,6 +19,16 @@
             DriverLicense = true;
             MonthlyExpenditure = 0;
         }
+
+        // Aaron's Methods
+        // -----------------------------------------------------------------------------------------------
+        // Method to add a booking
+        public void AddBooking(Booking booking)
+        {
+            Bookings.Add(booking);
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Aaron's methods
 
         // Casey's Methods
         // -----------------------------------------------------------------------------------------------

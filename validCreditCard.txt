@@ -1,4 +1,4 @@
 Credit Card Number: 1234567812345678
-Credit Card Expiry Date: 2030-09-28
+Credit Card Expiry Date: 30-09
 Credit Card CVV: 707
 Credit Cardholder Name: An Yong Shyan

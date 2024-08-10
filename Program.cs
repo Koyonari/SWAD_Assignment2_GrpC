@@ -1,8 +1,11 @@
 ﻿using Spectre.Console;
 using SWAD_Assignment2_GrpC;
+using System.Globalization;
 
 class Program
 {
+    private static int nextBookingId = 1;
+
     // Directly store car objects
     static List<Car> carList = new List<Car>
     {
@@ -91,21 +94,37 @@ class Program
 
     static void DisplayCarList(List<Car> carList)
     {
+        var table = new Table();
+        table.AddColumn("ID");
+        table.AddColumn("Make");
+        table.AddColumn("Model");
+        table.AddColumn("Year");
+        table.AddColumn("Status");
+        table.AddColumn("Mileage");
+        table.AddColumn("Listing Name");
+        table.AddColumn("License Plate");
+        table.AddColumn("Insurance Status");
+        table.AddColumn("Description");
+        table.AddColumn("Rental Rate");
+
         foreach (var car in carList)
         {
-            Console.WriteLine($"ID: {car.Id}");
-            Console.WriteLine($"Make: {car.Make}");
-            Console.WriteLine($"Model: {car.Model}");
-            Console.WriteLine($"Year: {car.Year}");
-            Console.WriteLine($"Status: {car.Status}");
-            Console.WriteLine($"Mileage: {car.Mileage}");
-            Console.WriteLine($"Listing Name: {car.ListingName}");
-            Console.WriteLine($"License Plate Number: {car.LicensePlateNumber}");
-            Console.WriteLine($"Insurance Status: {(car.InsuranceStatus ? "Valid" : "Invalid")}");
-            Console.WriteLine($"Description: {car.Description}");
-            Console.WriteLine($"Rental Rate: ${car.RentalRate:F2} per day");
-            Console.WriteLine("--------------------------------------------");
+            table.AddRow(
+                car.Id.ToString(),
+                car.Make,
+                car.Model,
+                car.Year.ToString(),
+                car.Status,
+                car.Mileage.ToString(),
+                car.ListingName,
+                car.LicensePlateNumber,
+                car.InsuranceStatus ? "Valid" : "Invalid",
+                car.Description,
+                $"{car.RentalRate:F2}"
+            );
         }
+
+        AnsiConsole.Write(table);
     }
 
     // Yong Shyan's methods
@@ -121,10 +140,12 @@ class Program
             int opt = PayBooking();
             Console.WriteLine("You have selected option " + opt);
             Booking selectedBooking = bookings[opt-1];
+
+            // Check for Additional Fee
             float additionalFee = selectedBooking.BookingLocations.CheckForAdditionalFee();
-            float hrs = selectedBooking.GetRentedHrs();
-            float rate = selectedBooking.ChosenCar.GetRentalRate() / 24;
-            float currentPayment = additionalFee + hrs * rate;
+
+            // Calculate Current Payment
+            float currentPayment = CalculateCurrentPayment(selectedBooking, additionalFee);
             Console.WriteLine("Your total current payment is S$" + currentPayment);
 
             bool paymentComplete = false;
@@ -162,6 +183,15 @@ class Program
             Console.WriteLine("You have 0 current bookings.");
         }
  
+    }
+
+    static float CalculateCurrentPayment(Booking selectedBooking, float additionalFee)
+    {
+        float hrs = selectedBooking.GetRentedHrs();
+        float rate = selectedBooking.ChosenCar.GetRentalRate() / 24;
+        float currentPayment = additionalFee + hrs * rate;
+
+        return currentPayment;
     }
 
     static void DisplayBookings()
@@ -270,69 +300,83 @@ class Program
         Console.WriteLine("--- Payment by Credit Card ---\n");
 
         // CC Number
-        Console.Write("16-digit Credit Card Number: ");
-        long ccn = long.Parse(Console.ReadLine());
+        long ccn = CreditCard.promptCreditCardNumber();
 
         // CC Expiry Date
-        Console.Write("Credit Card Expiration Date (yyyy-MM-dd): ");
-        DateTime exp = Convert.ToDateTime(Console.ReadLine());
+        DateTime exp = CreditCard.promptCreditCardExpiry();
 
         // CVV Number
-        Console.Write("Credit Card CVV: ");
-        int cvv = int.Parse(Console.ReadLine());
+        int cvv = CreditCard.promptCreditCardCVV();
 
         // CC Name
-        Console.Write("Credit Cardholder Name: ");
-        string cchn = Console.ReadLine();
+        string cchn = CreditCard.promptCreditCardName();
 
         // Make CreditCard object
         CreditCard creditCardPayment = new CreditCard(ccn, exp, cvv, cchn);
 
-        // Make CreditCard list for validation
-        List<CreditCard> creditCards = new List<CreditCard>();
+        // Verify the credit card details
+        bool verify = creditCardPayment.verifyCreditCardDetails(creditCardPayment);
 
-        // Simulate Process with the bank externally and get OK response
-        string validCCPath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\validCreditCard.txt";
-        string[] lines = File.ReadAllLines(validCCPath);
+        // Payment confirmation message
+        return isSuccessfulCreditCard(verify);
+    }
 
-        for (int i = 0; i < lines.Length; i += 4)
-        {
-            // Extract and trim details from each line
-            long valid_ccn = long.Parse(lines[i].Split(':')[1].Trim());
-            DateTime valid_exp = Convert.ToDateTime(lines[i + 1].Split(':')[1].Trim());
-            int valid_cvv = int.Parse(lines[i + 2].Split(':')[1].Trim());
-            string valid_cchn = lines[i + 3].Split(':')[1].Trim();
+    static bool DigitalWalletPayment()
+    {
+        Console.WriteLine("--- Payment by Digital Wallet ---\n");
 
-            // Make CreditCard object to add to list of valid credit cards
-            CreditCard validCreditCard = new CreditCard(valid_ccn, valid_exp, valid_cvv, valid_cchn);
-            creditCards.Add(validCreditCard);
-        }
+        // Wallet Type
+        string walletType = DigitalWallet.promptWalletType();
 
-        // Check if the input credit card matches any in the valid list
-        bool valid = false;
-        foreach (CreditCard validCard in creditCards)
-        {
-            if (creditCardPayment.CreditCardNumber == validCard.CreditCardNumber &&
-                creditCardPayment.ExpirationDate == validCard.ExpirationDate &&
-                creditCardPayment.CvvNumber == validCard.CvvNumber &&
-                creditCardPayment.CardholderName.Trim().ToLower().Equals(validCard.CardholderName.Trim().ToLower()))
-            {
-                valid = true; // Match found
-            }
-        }
+        // Wallet Name
+        string walletName = DigitalWallet.promptWalletName();
 
-        if (valid == true)
+        // Wallet Username
+        string walletUsername = DigitalWallet.promptWalletUsername(walletType);
+
+        // Wallet password
+        string walletPassword = DigitalWallet.promptWalletPassword();
+
+        // Make DigitalWallet object
+        DigitalWallet digitalWalletPayment = new DigitalWallet(walletType, walletName, walletUsername, walletPassword);
+
+        // Verify the digital wallet details
+        bool verify = digitalWalletPayment.verifyDigitalPaymentDetails(digitalWalletPayment);
+
+        // Payment confirmation message
+        return isSuccessfulDigitalWallet(verify);
+    }
+
+    static bool isSuccessfulDigitalWallet(bool verify)
+    {
+        if (verify == true)
         {
             string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
             File.WriteAllText(filePath, string.Empty);
-            Console.WriteLine("Credit Card details are correct! You have " + CountBookings(filePath) + " oustanding payments.");
+            Console.WriteLine("\nDigital Wallet details are correct! You have " + CountBookings(filePath) + " oustanding payments.");
+        }
+        else
+        {
+            Console.WriteLine("Incorrect digital wallet details. Try again.");
+        }
+        return verify;
+    }
+
+    static bool isSuccessfulCreditCard(bool verify)
+    {
+        if (verify == true)
+        {
+            string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
+            File.WriteAllText(filePath, string.Empty);
+            Console.WriteLine("\nCredit Card details are correct! You have " + CountBookings(filePath) + " oustanding payments.");
         }
         else
         {
             Console.WriteLine("Incorrect credit card details. Try again.");
         }
-        return valid;
+        return verify;
     }
+
     static int CountBookings(string filePath)
     {
         // Initialize booking count
@@ -352,84 +396,30 @@ class Program
 
         return bookingCount;
     }
-
-    static bool DigitalWalletPayment()
-    {
-        Console.WriteLine("--- Payment by Digital Wallet ---\n");
-
-        // Wallet Type
-        Console.Write("Wallet Type: ");
-        string walletType = Console.ReadLine();
-
-        // Wallet Name
-        Console.Write("Wallet Owner Name: ");
-        string walletName = Console.ReadLine();
-
-        // Wallet Username
-        string capitalizedWalletType = char.ToUpper(walletType[0]) + walletType.Substring(1);
-        Console.WriteLine("\nLog in with " + capitalizedWalletType);
-        Console.Write("Wallet Username: ");
-        string walletUsername = Console.ReadLine();
-
-        // Wallet password
-        Console.Write("Wallet Password: ");
-        string walletPassword = Console.ReadLine();
-
-        // Make DigitalWallet object
-        DigitalWallet digitalWalletPayment = new DigitalWallet(walletType, walletName, walletUsername, walletPassword);
-
-        // Make DigitalWallet list for validation
-        List<DigitalWallet> digitalWallets = new List<DigitalWallet>();
-
-        //Simulate process with the digital wallet externally and get OK response
-        string validCCPath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\validDigitalWallet.txt";
-        string[] lines = File.ReadAllLines(validCCPath);
-
-        for (int i = 0; i < lines.Length; i += 4)
-        {
-            // Extract and trim details from each line
-            string validWalletType = lines[i].Split(':')[1].Trim();
-            string validWalletOwnerName = lines[i + 1].Split(':')[1].Trim();
-            string validWalletUsername = lines[i + 2].Split(':')[1].Trim();
-            string validWalletPassword = lines[i + 3].Split(':')[1].Trim();
-
-            // Make CreditCard object to add to list of valid credit cards
-            DigitalWallet validDigitalWallet = new DigitalWallet(validWalletType, validWalletOwnerName, validWalletUsername, validWalletPassword);
-            digitalWallets.Add(validDigitalWallet);
-        }
-
-        // Check if the input credit card matches any in the valid list
-        bool valid = false;
-        foreach (DigitalWallet digitalWallet in digitalWallets)
-        {
-            if (digitalWalletPayment.WalletType.Trim().ToLower() == digitalWallet.WalletType.Trim().ToLower() &&
-                digitalWalletPayment.WalletOwnerName.Trim().ToLower() == digitalWallet.WalletOwnerName.Trim().ToLower() &&
-                digitalWalletPayment.WalletUsername.Equals(digitalWallet.WalletUsername) &&
-                digitalWalletPayment.WalletPassword.Equals(digitalWallet.WalletPassword))
-            {
-                valid = true; // Match found
-            }
-        }
-
-        if (valid == true)
-        {
-            string filePath = @"C:\Users\user\Documents\Files\Ngee Ann\Y2 Semester 1\Software Analysis & Design 4CU\Assignment 2\SWAD_Assignment2_GrpC\BookingDetails.txt";
-            File.WriteAllText(filePath, string.Empty);
-            Console.WriteLine("Digital Wallet details are correct! You have " + CountBookings(filePath) + " oustanding payments.");
-        }
-        else
-        {
-            Console.WriteLine("Incorrect digital wallet details. Try again.");
-        }
-        return valid;
-    }
     // -----------------------------------------------------------------------------------------------
     // End of Yong Shyan's methods
 
     // Aaron's methods
     // -----------------------------------------------------------------------------------------------
-    static void ReserveVehicle() // Method by Aaron
+    static void ReserveVehicle()
     {
+        CarRenter currentRenter = new CarRenter(
+                id: 1,
+                address: "123 Main Street, Cityville, Country",
+                email: "john.doe@example.com",
+                username: "JohnDoe92",
+                contactNumber: 1234567890,
+                name: "John Doe",
+                dateJoined: new DateTime(2021, 6, 15)
+            )
+        {
+            PrimeStatus = true,
+            Eligibility = true,
+            DateOfBirth = new DateTime(1992, 4, 10),
+            DriverLicense = true,
+            MonthlyExpenditure = 500.75f
+        };
+
         while (true)
         {
             Console.Clear(); // Clear the console for fresh display
@@ -473,63 +463,344 @@ class Program
                 Console.WriteLine("--------------------------------------------");
 
                 // Create a new booking instance and set its properties
-                CreateReservation(selectedCar);
+                CreateReservation(selectedCar, currentRenter);
                 break; // Exit the loop after successful reservation
             }
             else
             {
-                Console.WriteLine("The selected car is currently unavailable or reserved. Please choose another car.");
-                Console.WriteLine("Press any key to try again...");
-                Console.ReadKey();
+                DisplayReservationUnavailable();
             }
         }
     }
 
-    static void CreateReservation(Car selectedCar) // Method by Aaron
+    static void CreateReservation(Car selectedCar, CarRenter renter)
     {
-        Booking booking = new Booking
+        bool isValidBooking = false;
+
+        while (!isValidBooking)
         {
-            ChosenCar = selectedCar,
-            BookingLocations = new BookingLocation()
-        };
+            // Create a new booking instance
+            Booking booking = new Booking
+            {
+                Id = nextBookingId++
+            };
 
-        booking.ChooseStartDateTime();
+            // Use the AddBookingDetails method to set the booking details
+            booking.AddCar(selectedCar);
 
-        booking.ChooseEndDateTime();
+            // Prompt user for booking details
+            DateTime startBookingPeriod = ChooseStartDateTime();
+            DateTime endBookingPeriod = ChooseEndDateTime();
 
-        booking.EnterCarMake();
+            // Verify booking date and times
+            List<string> datetimeErrors = VerifyBookingDateTimes(startBookingPeriod, endBookingPeriod);
+            if (datetimeErrors.Count > 0)
+            {
+                foreach (string error in datetimeErrors)
+                {
+                    Console.WriteLine(error);
+                }
+                Console.WriteLine("Please correct the date and time errors above and try again.");
+                return; // Exit or re-prompt the user
+            }
 
-        booking.EnterCarModel();
+            string carMake;
+            string carModel;
 
-        booking.VerifyBookingDetails();
+            // Prompt and enter car make and model
+            carMake = EnterCarMake();
+            carModel = EnterCarModel();
 
-        Console.WriteLine("[[1]] iCar Station Physical Pickup \n[[2]] Doorstep Delivery \nSelect your mode of Car Pickup: ");
+            // Verify car make and model
+            List<string> carErrors = booking.ChosenCar.VerifyCarMakeModel(carMake, carModel);
+            if (carErrors.Count > 0)
+            {
+                foreach (string error in carErrors)
+                {
+                    Console.WriteLine(error);
+                }
+                Console.WriteLine("Please correct the car details errors above and try again.");
+                return; // Exit or re-prompt the user
+            }
 
-        string choice = Console.ReadLine();
+            // Use the AddBookingDetails method to set the booking details
+            booking.AddBookingDetails(startBookingPeriod, endBookingPeriod);
 
-        if (choice == "1")
-        {
-            booking.DisplayPickupLocations();
-            booking.EnterPickupLocation();
-            booking.VerifyPickupLocation();
+            // Choose pickup or delivery, and enter pickup location (for both iCar Station and Delivery)
+            SelectPickupOption(booking);
+
+            // Display reservation details and confirm reservation
+            DisplayReservationDetails(booking, selectedCar);
+            PromptReservationConfirmation();
+            ConfirmReservation(booking);
+
+            renter.AddBooking(booking);
+
+            // If all is well, exit the loop
+            isValidBooking = true;
         }
-        else if (choice == "2")
+    }
+
+    // Method to display reservation unavailable
+    static void DisplayReservationUnavailable()
+    {
+        AnsiConsole.MarkupLine("[red]The selected car is currently unavailable or reserved. Please choose another car.[/]");
+        AnsiConsole.MarkupLine("[yellow]Press any key to try again...[/]");
+        Console.ReadKey();
+    }
+
+    // Method to prompt for start date and time
+    static void PromptStartDateTime()
+    {
+        Console.WriteLine("Enter the start date and time of the booking period (yyyy-MM-dd HH:mm): ");
+    }
+
+    // Method to choose the start date and time
+    static DateTime ChooseStartDateTime()
+    {
+        PromptStartDateTime();
+        return DateTime.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+    }
+
+    // Method to prompt for end date and time
+    static void PromptEndDateTime()
+    {
+        Console.WriteLine("Enter the end date and time of the booking period (yyyy-MM-dd HH:mm): ");
+    }
+
+    // Method to choose the end date and time
+    static DateTime ChooseEndDateTime()
+    {
+        PromptEndDateTime();
+        return DateTime.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
+    }
+
+    static List<string> VerifyBookingDateTimes(DateTime startBookingPeriod, DateTime endBookingPeriod)
+    {
+        List<string> errorMessages = new List<string>();
+
+        if (startBookingPeriod == default)
         {
-            booking.Delivery();
-            booking.EnterDeliveryAddress();
-            booking.VerifyDeliveryAddress();
-            booking.UpdateDeliveryStatus();
-            booking.BookingLocations.AdditionalPayment = 20;
+            errorMessages.Add("Start booking period is not set.");
+        }
+        if (endBookingPeriod == default)
+        {
+            errorMessages.Add("End booking period is not set.");
+        }
+        if (endBookingPeriod <= startBookingPeriod)
+        {
+            errorMessages.Add("End booking period must be after the start booking period.");
+        }
+
+        return errorMessages;
+    }
+
+    // Method to prompt for car make
+    static void PromptCarMake()
+    {
+        Console.WriteLine("Enter the make of the chosen car: ");
+    }
+
+    // Method to enter the car make
+    static string EnterCarMake()
+    {
+        PromptCarMake();
+        return Console.ReadLine();
+    }
+
+    // Method to prompt for car make
+    static void PromptCarModel()
+    {
+        Console.WriteLine("Enter the model of the chosen car: ");
+    }
+
+    // Method to enter the car make
+    static string EnterCarModel()
+    {
+        PromptCarModel();
+        return Console.ReadLine();
+    }
+
+    static string PromptPickupOption()
+    {
+        return AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("Select your mode of Car Pickup:")
+                .AddChoices(new[] { "iCar Station Physical Pickup", "Doorstep Delivery" })
+        );
+    }
+
+    static void SelectPickupOption(Booking booking)
+    {
+        // Create an instance of BookingLocation
+        BookingLocation bookingLocation = new BookingLocation();
+
+        // Get user's choice of pickup or delivery
+        var pickupOrDelivery = PromptPickupOption();
+
+        if (pickupOrDelivery == "iCar Station Physical Pickup")
+        {
+            bool delivery = false;
+            float additionalPayment = 0;
+            DisplayPickupLocations();
+
+            string pickupLocation;
+            do
+            {
+                pickupLocation = EnterPickupLocation();
+                if (!VerifyPickupLocation(pickupLocation))
+                {
+                    DisplayReservationDetailsIncorrect();
+                }
+            } while (!VerifyPickupLocation(pickupLocation));
+
+            bookingLocation.AddPickupLocationDetails(pickupLocation, delivery, additionalPayment);
+        }
+        else if (pickupOrDelivery == "Doorstep Delivery")
+        {
+            string deliveryAddress;
+            float deliveryFee = 0;
+            bool delivery = true;
+            do
+            {
+                Delivery();
+                deliveryAddress = EnterDeliveryAddress();
+                if (!VerifyDeliveryAddress(deliveryAddress))
+                {
+                    Console.WriteLine("Invalid delivery address. Please enter a valid address between 5 and 100 characters.");
+                }
+            } while (!VerifyDeliveryAddress(deliveryAddress));
+
+            deliveryFee += 20;
+            bookingLocation.AddPickupLocationDetails(deliveryAddress, delivery, deliveryFee);
         }
         else
         {
-            Console.WriteLine("Invalid choice. Please enter '1' or '2'.");
+            Console.WriteLine("Invalid choice. Please select a valid option.");
         }
 
-        booking.DisplayReservationDetails();
-        booking.ConfirmReservation();
-        booking.SaveBookingDetailsToFile();
-        bookings.Add(booking);
+        booking.AddBookingLocationDetails(bookingLocation);
+    }
+
+    static void DisplayPickupLocations()
+    {
+        Console.WriteLine("Available pickup locations:");
+        // List of sample pickup locations
+        string[] locations = { "Downtown iCar Station", "Changi iCar Station", "Marina Bay iCar Station", "Orchard iCar Station", "Sentosa iCar Station", "East Coast iCar Station" };
+        foreach (var location in locations)
+        {
+            Console.WriteLine(location);
+        }
+    }
+
+    static void PromptPickupLocation()
+    {
+        Console.WriteLine("Enter your pickup location from the list above: ");
+    }
+
+    static string EnterPickupLocation()
+    {
+        PromptPickupLocation();
+        return Console.ReadLine();
+    }
+
+    // Method to verify pickup location
+    static bool VerifyPickupLocation(string pickupLocation)
+    {
+        // List of valid pickup locations
+        string[] validLocations = {
+                "Downtown iCar Station",
+                "Changi iCar Station",
+                "Marina Bay iCar Station",
+                "Orchard iCar Station",
+                "Sentosa iCar Station",
+                "East Coast iCar Station"
+            };
+
+        // Check if the entered pickup location is valid
+        return Array.Exists(validLocations, location => location.Equals(pickupLocation, StringComparison.OrdinalIgnoreCase));
+    }
+
+    static void Delivery()
+    {
+        Console.WriteLine("You have chosen the Doorstep Delivery option.");
+        Console.WriteLine("A small fee will be added based in accordance to the selected location");
+    }
+
+    static void PromptDeliveryAddress()
+    {
+        Console.WriteLine("Enter your delivery address: ");
+    }
+
+    static string EnterDeliveryAddress()
+    {
+        PromptDeliveryAddress();
+        return Console.ReadLine();
+    }
+
+    static bool VerifyDeliveryAddress(string deliveryAddress)
+    {
+        const int MinLength = 5;
+        const int MaxLength = 100;
+
+        return !string.IsNullOrEmpty(deliveryAddress) && deliveryAddress.Length >= MinLength && deliveryAddress.Length <= MaxLength;
+    }
+
+    // Method to display reservation details
+    static void DisplayReservationDetails(Booking Booking, Car ChosenCar)
+    {
+        Console.WriteLine("Reservation Details:");
+        Console.WriteLine($"Booking Id: {Booking.Id}");
+        Console.WriteLine($"Car Make: {ChosenCar.Make}");
+        Console.WriteLine($"Car Model: {ChosenCar.Model}");
+        Console.WriteLine($"Car Year: {ChosenCar.Year}");
+        Console.WriteLine($"Rental Rate: ${ChosenCar.RentalRate:F2} per day");
+        Console.WriteLine($"Start Date: {Booking.StartBookingPeriod:yyyy-MM-dd HH:mm}");
+        Console.WriteLine($"End Date: {Booking.EndBookingPeriod:yyyy-MM-dd HH:mm}");
+        Console.WriteLine($"Pickup Location: {Booking.BookingLocations.PickupLocation}");
+        Console.WriteLine($"Additional Payments: ${Booking.BookingLocations.AdditionalPayment:F2}");
+        Console.WriteLine("--------------------------------------------");
+    }
+
+    static void DisplayReservationDetailsIncorrect()
+    {
+        Console.WriteLine("There was a problem upon verifying the reservation details due to incorrect detail or detail format.");
+        Console.WriteLine("Press any key to try again...");
+        Console.ReadKey();
+    }
+
+    static void PromptReservationConfirmation()
+    {
+        Console.WriteLine("Confirm All Reservation Details [Y/N]: ");
+    }
+
+    // Method to confirm reservation
+    static void ConfirmReservation(Booking Booking)
+    {
+        string confirmation = Console.ReadLine();
+        if (confirmation.ToUpper() == "Y")
+        {
+            Booking.ChosenCar.UpdateCarStatus();
+            Booking.UpdateBookingStatus();
+            DisplayPendingPayment();
+        }
+        else
+        {
+            Console.WriteLine("Reservation not confirmed.");
+        }
+    }
+
+    static void DisplayPendingPayment()
+    {
+        Console.WriteLine("All Reservation details have been confirmed.");
+        Console.WriteLine("Press any key to move on to make payment.");
+        Console.ReadKey();
+        ProcessPayment();
+    }
+
+    static void ProcessPayment()
+    {
+        // MakePayment();  Ref to Make Payment Use Case
     }
     // -----------------------------------------------------------------------------------------------
     // End of Aaron's methods

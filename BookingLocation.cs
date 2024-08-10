@@ -25,6 +25,18 @@
             AdditionalPayment = additionalPayment;
         }
 
+        // Aaron's Methods
+        // -----------------------------------------------------------------------------------------------
+        // Method to add the pickup location details to BookingLocation
+        public void AddPickupLocationDetails(string pickupLocation, bool delivery, float additionalPayment)
+        {
+            this.PickupLocation = pickupLocation;
+            this.Delivery = delivery;
+            this.AdditionalPayment = additionalPayment;
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Aaron's methods
+
         // Start of Yong Shyan's methods
         // -----------------------------------------------------------------------------------------------
         public float CheckForAdditionalFee()

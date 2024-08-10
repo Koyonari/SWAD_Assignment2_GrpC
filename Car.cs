@@ -57,6 +57,29 @@
                 return true;
             }
         }
+
+        // Method to verify the car make and model
+        public List<string> VerifyCarMakeModel(string make, string model)
+        {
+            List<string> errorMessages = new List<string>();
+
+            if (string.IsNullOrEmpty(make) || make != Make)
+            {
+                errorMessages.Add("The entered car make does not match the selected car.");
+            }
+            if (string.IsNullOrEmpty(model) || model != Model)
+            {
+                errorMessages.Add("The entered car model does not match the selected car.");
+            }
+
+            return errorMessages;
+        }
+
+        // Method to update the status of the chosen car
+        public void UpdateCarStatus()
+        {
+            Status = "Reserved";
+        }
         // -----------------------------------------------------------------------------------------------
         // End of Aaron's methods
 
