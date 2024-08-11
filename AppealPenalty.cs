@@ -1,4 +1,6 @@
-﻿namespace SWAD_Assignment2_GrpC
+﻿using System;
+
+namespace SWAD_Assignment2_GrpC
 {
     public class AppealPenalty
     {
@@ -21,24 +23,22 @@
             AppealDescription = appealDescription;
         }
 
-        // Casey's Methods
-        // -----------------------------------------------------------------------------------------------
         public void DisplayInformation()
         {
-            Console.WriteLine($"Appeal Information:\nReason: {AppealReason}\nAmount: ${Penalty.PenaltyAmount}\nStatus: {AppealStatus}\nDescription: {AppealDescription}");
+            Console.WriteLine($"Reason: {AppealReason}");
+            Console.WriteLine($"Amount: ${Penalty.PenaltyAmount}");
+            Console.WriteLine($"Status: {AppealStatus}");
+            Console.WriteLine($"Description: {AppealDescription}");
         }
 
         public void UpdateStatus(string newStatus)
         {
             AppealStatus = newStatus;
-            Console.WriteLine($"Appeal status updated to: {AppealStatus}");
         }
 
         public string GetSummary()
         {
             return $"Appeal by {Appellant.Name} - Reason: {AppealReason}, Amount: ${Penalty.PenaltyAmount}";
         }
-        // -----------------------------------------------------------------------------------------------
-        // End of Casey's methods
     }
 }
