@@ -28,7 +28,26 @@
         {
             Console.WriteLine("Car Owner Appeal History:");
         }
+
         // -----------------------------------------------------------------------------------------------
         // End of Casey's methods
+
+        // Start of Daniel's methods
+        // -----------------------------------------------------------------------------------------------
+        public void RegisterCar(Car car)
+        {
+            Listings.Add(car);
+        }
+
+        public void UpdateCar(Car updatedCar)
+        {
+            var index = Listings.FindIndex(c => c.Id == updatedCar.Id);
+            if (index >= 0)
+            {
+                Listings[index] = updatedCar;
+            }
+        }
+        // -----------------------------------------------------------------------------------------------
+        // End of Daniel's methods
     }
 }
