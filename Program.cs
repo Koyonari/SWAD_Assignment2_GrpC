@@ -168,7 +168,7 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine("Invalid payment method.");
+                    InvalidPayment();
                 }
             }
 
@@ -180,15 +180,26 @@ class Program
         }
         else
         {
-            Console.WriteLine("You have 0 current bookings.");
+            NoBookings();
         }
  
+    }
+
+    static void InvalidPayment()
+    {
+        Console.WriteLine("Invalid payment method.");
+    }
+
+    static void NoBookings()
+    {
+        Console.WriteLine("You have 0 current bookings");
     }
 
     static float CalculateCurrentPayment(Booking selectedBooking, float additionalFee)
     {
         float hrs = selectedBooking.GetRentedHrs();
-        float rate = selectedBooking.ChosenCar.GetRentalRate() / 24;
+        float dailyRate = selectedBooking.ChosenCar.GetRentalRate();
+        float rate = dailyRate / 24;
         float currentPayment = additionalFee + hrs * rate;
 
         return currentPayment;
@@ -537,6 +548,7 @@ class Program
             renter.AddBooking(booking);
 
             booking.SaveBookingDetailsToFile();
+            bookings.Add(booking);
 
             // If all is well, exit the loop
             isValidBooking = true;
