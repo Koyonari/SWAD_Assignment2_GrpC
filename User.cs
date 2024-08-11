@@ -1,4 +1,6 @@
-﻿namespace SWAD_Assignment2_GrpC
+﻿using System;
+
+namespace SWAD_Assignment2_GrpC
 {
     public class User
     {

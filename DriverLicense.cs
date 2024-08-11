@@ -15,14 +15,12 @@
 
         public string LicenseType { get; set; }
 
-        public string Address { get; set; }
-
         public string Status { get; set; }
 
         public int DemeritPoints { get; set; }
 
         // Constructor
-        public DriverLicense(int licenseId, string name, DateTime dateOfBirth, DateTime issueDate, DateTime expirationDate, string licenseType, string address, string status, int demeritPoints)
+        public DriverLicense(int licenseId, string name, DateTime dateOfBirth, DateTime issueDate, DateTime expirationDate, string licenseType, string status, int demeritPoints)
         {
             LicenseId = licenseId;
             Name = name;
@@ -30,7 +28,6 @@
             IssueDate = issueDate;
             ExpirationDate = expirationDate;
             LicenseType = licenseType;
-            Address = address;
             Status = status;
             DemeritPoints = demeritPoints;
         }
