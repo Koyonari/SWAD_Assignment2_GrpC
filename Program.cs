@@ -201,7 +201,6 @@ class Program
         {
             PrimeStatus = true,
             Eligibility = true,
-            DateOfBirth = new DateTime(1992, 4, 10),
             DriverLicense = true,
             MonthlyExpenditure = 500.75f
         };
@@ -217,7 +216,6 @@ class Program
         {
             PrimeStatus = false,
             Eligibility = true,
-            DateOfBirth = new DateTime(1992, 4, 10),
             DriverLicense = true,
             MonthlyExpenditure = 500.75f
         };
