@@ -536,6 +536,8 @@ class Program
 
             renter.AddBooking(booking);
 
+            booking.SaveBookingDetailsToFile();
+
             // If all is well, exit the loop
             isValidBooking = true;
         }
@@ -795,12 +797,6 @@ class Program
         Console.WriteLine("All Reservation details have been confirmed.");
         Console.WriteLine("Press any key to move on to make payment.");
         Console.ReadKey();
-        ProcessPayment();
-    }
-
-    static void ProcessPayment()
-    {
-        // MakePayment();  Ref to Make Payment Use Case
     }
     // -----------------------------------------------------------------------------------------------
     // End of Aaron's methods
